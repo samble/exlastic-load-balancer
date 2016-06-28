@@ -1,1 +1,13 @@
-from http://blog.oozou.com/an-intro-to-otp-in-elixir/
+## Dev-Quickstart
+
+Install dependencies
+
+    $ mix deps.get
+
+Run tests
+
+    $ mix test
+
+Run linter
+
+    $ mix dogma

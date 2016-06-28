@@ -25,6 +25,9 @@ defmodule ExlasticLB.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    []
+    [
+      # a linter for elixir code
+      {:dogma, "~> 0.1", only: :dev},
+    ]
   end
 end
