@@ -28,6 +28,7 @@ defmodule ExlasticLB.Mixfile do
     [
       # a linter for elixir code
       {:dogma, "~> 0.1", only: :dev},
+      {:erlcloud, path: "/home/ubuntu/github/erlcloud"},
     ]
   end
 end
