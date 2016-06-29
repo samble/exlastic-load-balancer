@@ -14,7 +14,7 @@ In the `~/.aws/credentials` file, add something like this (profile name must be 
 
 Show infrastructure plan:
 
-    $ terraform plan
+    $ terraform plan infracode
 
 ## Dev-Quickstart
 
