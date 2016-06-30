@@ -10,16 +10,12 @@ defmodule AWS do
     IO.puts Kernel.inspect(mets, pretty: true)
 
     stats = :erlcloud_mon.get_metric_statistics(
-      'AWS/EC2',
       'CPUUtilization',
       {{2016, 06, 29},{0, 0, 0}},
       {{2016, 06, 30},{0, 0, 0}},
-      60,
-      '',
-      ['Average'],
-      ['InstanceType','t2.micro']
+      'i-1902ba9f'
     )
-    IO.puts Kernel.inspect(stats, pretty: true)
+    #IO.puts Kernel.inspect(stats, pretty: true)
     
     #IO.puts 1+1
   end
