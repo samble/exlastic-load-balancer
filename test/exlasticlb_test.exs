@@ -5,10 +5,12 @@ defmodule HostTableTests do
   test "read config" do
     HostTable.start_link("test/exlastic_test_config.json");
     host_names = HostTable.get_hosts()
-    assert "metered-host" in host_names
+    assert "metered-host-small" in host_names
     assert "unmetered-host" in host_names
-    assert HostTable.get_host("metered-host")["metered"]
-    assert !HostTable.get_host("unmetered-host")["metered"]
+
+    assert HostTable.get_host("metered-host-small")["instance-type"] == "t2.small"
+    assert HostTable.get_host("unmetered-host")["instance-type"] == "m4.large"
+
   end
   
   test "simple registration" do
@@ -34,7 +36,7 @@ defmodule HostTableTests do
   end
 
   test "get AWS cpu usage percent" do
-    AWS.cpu_usage_percent('dummy')
+    #AWS.cpu_usage_percent('dummy')
     assert true
   end
 

@@ -1,8 +1,17 @@
-
 defmodule HostTable do
   import Poison
   @ default_config %{"hosts" => %{}}
   @ default_host_config %{"metered" => false}
+
+  @ t2_cpu_limits %{
+    "t2.nano"  =>  0.05,
+    "t2.micro" =>  0.10,
+    "t2.small" =>  0.20,
+    "t2.medium" => 0.40,
+    "t2.large" =>  0.60
+  } # http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/t2-instances.html
+  # TODO: What does the ** mean practically:
+  # 't2.medium and t2.large instances have two vCPUs. The base performance is an aggregate of the two vCPUs.'
 
   @doc """
   Class attributes cannot be accessed outside the class,
@@ -26,6 +35,8 @@ defmodule HostTable do
       |> Dict.keys()
     num_hosts = hosts |> Enum.count()
     host_string = Enum.join(hosts, ",")
+    IO.puts "hosts!"
+    IO.puts Kernel.inspect config_hash, pretty: true
     IO.puts "Registering #{num_hosts} hosts under this LB"
     (num_hosts>0) && IO.puts "Hosts are: #{host_string}"
     Agent.start_link(fn -> config_hash end, name: __MODULE__)

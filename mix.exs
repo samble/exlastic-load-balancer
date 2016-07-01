@@ -13,8 +13,7 @@ defmodule ExlasticLB.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [
-      applications: [:logger],
-      mod: {Exlasticlb, []}
+      applications: [:logger]
     ]
   end
 
@@ -31,7 +30,7 @@ defmodule ExlasticLB.Mixfile do
     [
       # a linter for elixir code
       {:dogma, "~> 0.1", only: :dev},
-      { :poison, "2.2.0"},
+      {:poison, "2.2.0"},
       {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"}
     ]
   end

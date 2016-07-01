@@ -1,11 +1,14 @@
 {
   "hosts":
   {
-    "metered-host": {
-      "metered": true
+    "metered-host-large": {
+      "instance-type": "t2.large"
+    },
+    "metered-host-small": {
+      "instance-type": "t2.small"
     },
     "unmetered-host": {
-      "metered": false
+      "instance-type": "m4.large"
     }
   }
 }
