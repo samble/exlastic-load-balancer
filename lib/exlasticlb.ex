@@ -1,3 +1,1 @@
-defmodule FizzBuzz do
-
-end
+import HostTable
