@@ -16,6 +16,7 @@ defmodule HostTable do
   Class attributes cannot be accessed outside the class,
   so this function simply returns the class attribute
   """
+  @spec default_host_config() :: Dict
   def default_host_config() do @default_host_config end
 
   @doc """
@@ -44,6 +45,7 @@ defmodule HostTable do
   @doc """
   Gets the configuration for a specific host.
   """
+  @spec get_host(String) :: Dict
   def get_host(host_id) do
     Agent.get(
       __MODULE__,
@@ -57,6 +59,7 @@ defmodule HostTable do
   @doc """
   Updates the health data for all hosts.
   """
+  @spec update_all() :: nil
   def update_all() do
     Enum.map(
       HostTable.get_hosts(),
@@ -73,7 +76,9 @@ defmodule HostTable do
   no other computation.. host_dict is considered to already contain
   all the relevant/most recent data.
   """
+  @spec rank_host(Dict) :: Integer
   def rank_host(host_dict) do
+    _ = host_dict # silence compiler warning
     1
   end
 
@@ -81,6 +86,7 @@ defmodule HostTable do
   Based on all available host health data, choose the host that
   should answer the current HTTP request.
   """
+  @spec choose_host() :: String
   def choose_host() do
     hosts = HostTable.get_hosts()
     ranks = Enum.map(
@@ -98,6 +104,7 @@ defmodule HostTable do
   Updates the health data for one host.
   The host must have already been registered with the load balancer
   """
+  @spec update_host(String) :: any
   def update_host(host_id) do
     Agent.get(
       __MODULE__,
@@ -129,6 +136,7 @@ defmodule HostTable do
   Registers a new host with load balancer,
   along with an optional host config.
   """
+  @spec put_host(String, Dict) :: Dict
   def put_host(host_id, host_config \\ @default_host_config) do
     Agent.update(
       __MODULE__,
@@ -144,6 +152,7 @@ defmodule HostTable do
   @doc """
   Get a Enum of all the host_id registered with the loader balancer
   """
+  @spec get_hosts() :: Enum
   def get_hosts() do
     Agent.get(
       __MODULE__,
