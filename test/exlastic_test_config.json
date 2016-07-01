@@ -2,13 +2,13 @@
   "hosts":
   {
     "metered-host-large": {
-      "instance-type": "t2.large"
+      "instance_type": "t2.large"
     },
     "metered-host-small": {
-      "instance-type": "t2.small"
+      "instance_type": "t2.small"
     },
     "unmetered-host": {
-      "instance-type": "m4.large"
+      "instance_type": "m4.large"
     }
   }
 }

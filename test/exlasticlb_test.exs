@@ -16,14 +16,14 @@ defmodule HostTableTests do
     assert "metered-host-small" in host_names
     assert "unmetered-host" in host_names
 
-    assert HostTable.get_host("metered-host-small")["instance-type"] == "t2.small"
-    assert HostTable.get_host("unmetered-host")["instance-type"] == "m4.large"
+    assert HostTable.get_host("metered-host-small")["instance_type"] == "t2.small"
+    assert HostTable.get_host("unmetered-host")["instance_type"] == "m4.large"
 
   end
 
   test "simple registration" do
-    HostTable.start_link();
-    HostTable.put_host(@host_id);
+    HostTable.start_link()
+    HostTable.put_host(@host_id)
     hosts = HostTable.get_hosts()
     assert @host_id in hosts
     actual = HostTable.get_host(@host_id)

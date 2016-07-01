@@ -1,6 +1,6 @@
 defmodule HostTable do
   @ default_config %{"hosts" => %{}}
-  @ default_host_config %{"metered" => false}
+  @ default_host_config %{:instance_type => "", :cpu_usage => 0.0, :available => false}
 
   @ t2_cpu_limits %{
     "t2.nano"  =>  0.05,
@@ -22,23 +22,32 @@ defmodule HostTable do
   Implementing Agent.start_link
   """
   def start_link(config_file\\nil) do
-    config_hash = cond do
+    config_file_hash = cond do
       config_file != nil ->
         {:ok, body} = File.read(config_file)
-        config_hash = Poison.Parser.parse!(body)
+        Poison.Parser.parse!(body)
       true ->
-        config_hash = @default_config
+        @default_config
       end
-      hosts = config_hash
-      |> Dict.get("hosts")
-      |> Dict.keys()
-    num_hosts = hosts |> Enum.count()
-    host_string = Enum.join(hosts, ",")
-    IO.puts "hosts!"
-    IO.puts Kernel.inspect config_hash, pretty: true
-    IO.puts "Registering #{num_hosts} hosts under this LB"
-    (num_hosts>0) && IO.puts "Hosts are: #{host_string}"
-    Agent.start_link(fn -> config_hash end, name: __MODULE__)
+
+    #IO.puts "config_file_hash:"
+    #IO.puts Kernel.inspect config_file_hash, pretty: true
+
+    host_config_hash = for {instance_id, data} <-
+      config_file_hash["hosts"], into: %{}, do:
+        {instance_id, _create_host_entry(data)}
+
+    #num_hosts = host_config_hash |> Enum.count()
+    #IO.puts "Registering #{num_hosts} hosts under this LB"
+
+    #host_string = Kernel.inspect(host_config_hash, pretty: true)
+    #IO.puts "Hosts are: #{host_string}"
+
+    Agent.start_link(fn -> host_config_hash end, name: __MODULE__)
+  end
+  
+  defp _create_host_entry(host_map) do
+    Map.merge(@default_host_config, host_map)
   end
 
   @doc """
@@ -48,8 +57,8 @@ defmodule HostTable do
     Agent.get(
       __MODULE__,
       fn map ->
-        IO.puts("map=#{inspect(map)}")
-        map|>Dict.get("hosts")|>Dict.get(host_id)
+        #IO.puts("map=#{inspect(map)}")
+        Map.get(map, host_id)
       end
     )
   end
@@ -103,7 +112,6 @@ defmodule HostTable do
       __MODULE__,
       fn map ->
         current_data = map
-        |> Dict.get("hosts")
         |> Dict.get(host_id)
         metered = current_data |> Dict.get("metered")
         cond do
@@ -133,9 +141,7 @@ defmodule HostTable do
     Agent.update(
       __MODULE__,
       fn map ->
-        hosts = map|>Dict.get("hosts")
-        hosts = hosts|>Dict.put(host_id, host_config)
-        map = map|>Dict.put("hosts", hosts)
+        map = Map.put(map, host_id, host_config)
         #IO.puts("map=#{inspect(map)}")
         map
       end )
@@ -148,9 +154,7 @@ defmodule HostTable do
     Agent.get(
       __MODULE__,
       fn map->
-        map
-        |>Dict.get("hosts")
-        |>Dict.keys()
+        Map.keys(map)
       end)
   end
 end
