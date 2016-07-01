@@ -30,7 +30,13 @@ defmodule ExlasticLB.Mixfile do
     [
       # a linter for elixir code
       {:dogma, "~> 0.1", only: :dev},
+
+      # a static analysis tool
+      {:dialyxir, "~> 0.3", only: [:dev]},
+
+      # a json parser
       {:poison, "2.2.0"},
+
       {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"}
     ]
   end
