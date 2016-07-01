@@ -1,7 +1,15 @@
 
 defmodule HostTableTests do
   use ExUnit.Case
+
   @host_id "i-42"
+
+  test "host rank" do
+  end
+
+  test "choose_host"
+  end
+
   test "read config" do
     HostTable.start_link("test/exlastic_test_config.json");
     host_names = HostTable.get_hosts()
@@ -10,7 +18,7 @@ defmodule HostTableTests do
     assert HostTable.get_host("metered-host")["metered"]
     assert !HostTable.get_host("unmetered-host")["metered"]
   end
-  
+
   test "simple registration" do
     HostTable.start_link();
     HostTable.put_host(@host_id);

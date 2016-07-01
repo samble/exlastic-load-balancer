@@ -1,6 +1,5 @@
 
 defmodule HostTable do
-  import Poison
   @ default_config %{"hosts" => %{}}
   @ default_host_config %{"metered" => false}
 
@@ -56,6 +55,39 @@ defmodule HostTable do
   end
 
   @doc """
+  Return an integer rank based on host health, where the magnitude
+  is based on the preference that this host ought to answer the
+  current HTTP request to the load balancer.  This value should
+  only be based on data directly available in host_dict and need
+  no other computation.. host_dict is considered to already contain
+  all the relevant/most recent data.
+  """
+  def rank_host(host_dict) do
+    return 1
+  end
+
+  @doc """
+  Based on all available host health data, choose the host that
+  should answer the current HTTP request.
+  """
+  def choose_host() do
+    Agent.get(
+      __MODULE__,
+      fn map ->
+        hosts = HostTable.get_hosts()
+        ranks = Enum.map(
+          hosts,
+          fn host_id ->
+            host = HostTable.get_host(host_id)
+            host_rank = HostTable.rank(host)
+            [host_rank, host_id]
+          end)
+        {best_rank, chosen_host} = Enum.max(ranks)
+        chosen_host
+      end)
+  end
+
+  @doc """
   Updates the health data for one host.
   The host must have already been registered with the load balancer
   """
@@ -78,7 +110,9 @@ defmodule HostTable do
           true ->
             # value for `metered` was never set, or set to something
             # that is not a bool.  this should never happen
-            # TODO: raise an exception here
+            # TODO: raise an exception here for invalid config,
+            #       or else do config validation during `start_link`
+            #       and during `put_host`
             nil
         end
       end)
