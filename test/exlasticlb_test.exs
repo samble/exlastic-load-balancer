@@ -7,7 +7,7 @@ defmodule HostTableTests do
   test "host rank" do
   end
 
-  test "choose_host"
+  test "choose_host" do
   end
 
   test "read config" do
