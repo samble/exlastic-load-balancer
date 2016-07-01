@@ -32,6 +32,12 @@ defmodule HostTableTests do
     HostTable.put_host(@host_id)
     HostTable.update_host(@host_id)
   end
+
+  test "get AWS cpu usage percent" do
+    AWS.cpu_usage_percent('dummy')
+    assert true
+  end
+
 end
 
 defmodule ExlasticLBTest do
