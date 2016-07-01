@@ -12,7 +12,10 @@ defmodule ExlasticLB.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [
+      applications: [:logger],
+      mod: {Exlasticlb, []}
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -28,7 +31,7 @@ defmodule ExlasticLB.Mixfile do
     [
       # a linter for elixir code
       {:dogma, "~> 0.1", only: :dev},
-      {:erlcloud, path: "/home/ubuntu/github/erlcloud"},
+      {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"},
     ]
   end
 end
