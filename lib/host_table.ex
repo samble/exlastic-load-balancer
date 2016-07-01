@@ -63,7 +63,7 @@ defmodule HostTable do
   all the relevant/most recent data.
   """
   def rank_host(host_dict) do
-    return 1
+    1
   end
 
   @doc """
@@ -71,20 +71,16 @@ defmodule HostTable do
   should answer the current HTTP request.
   """
   def choose_host() do
-    Agent.get(
-      __MODULE__,
-      fn map ->
-        hosts = HostTable.get_hosts()
-        ranks = Enum.map(
+    hosts = HostTable.get_hosts()
+    ranks = Enum.map(
           hosts,
           fn host_id ->
             host = HostTable.get_host(host_id)
-            host_rank = HostTable.rank(host)
+            host_rank = HostTable.rank_host(host)
             [host_rank, host_id]
           end)
-        {best_rank, chosen_host} = Enum.max(ranks)
-        chosen_host
-      end)
+    {_, chosen_host} = Enum.max(ranks)
+    chosen_host
   end
 
   @doc """
