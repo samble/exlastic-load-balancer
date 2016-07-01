@@ -1,24 +1,30 @@
+import Poison
 defmodule HostTable do
-  @ default_config %{"hosts": %{}}
-  @ default_host_config %{"metered": false}
+  @ default_config %{"hosts" => %{}}
+  @ default_host_config %{"metered" => false}
 
-  # TODO: fixme
-  def get_default_host_config() do @default_host_config end
+  @doc """
+  Class attributes cannot be accessed outside the class,
+  so this function simply returns the class attribute
+  """
+  def default_host_config() do @default_host_config end
 
   @doc """
   Implementing Agent.start_link
   """
   def start_link(config_file\\nil) do
-    cond do
+    {config_hash,hosts} = cond do
       config_file != nil ->
         {:ok, body} = File.read(config_file)
-        config_hash = %{} #Poison.Parser.parse!(body)
+        config_hash = Poison.Parser.parse!(body)
         hosts = config_hash
         |> Dict.get("hosts")
         |> Dict.keys()
+        {config_hash, hosts}
       true ->
         config_hash = @default_config
-        hosts = config_hash|>Map.get(:hosts)
+        hosts = config_hash|>Dict.get("hosts")
+        {config_hash, hosts}
       end
     num_hosts = hosts |> Enum.count()
     host_string = Enum.join(hosts, ",")
@@ -35,7 +41,7 @@ defmodule HostTable do
       __MODULE__,
       fn map ->
         IO.puts("map=#{inspect(map)}")
-        map|>Map.get(:hosts)|>Map.get(host_id)
+        map|>Dict.get("hosts")|>Dict.get(host_id)
       end
     )
   end
@@ -60,9 +66,9 @@ defmodule HostTable do
       __MODULE__,
       fn map ->
         current_data = map
-        |> Map.get(:hosts)
-        |> Map.get(host_id)
-        metered = current_data |> Map.get(:metered)
+        |> Dict.get("hosts")
+        |> Dict.get(host_id)
+        metered = current_data |> Dict.get("metered")
         cond do
           metered == true ->
             # consult cloudwatch in a Proc here,
@@ -88,9 +94,9 @@ defmodule HostTable do
     Agent.update(
       __MODULE__,
       fn map ->
-        hosts = map|>Map.get(:hosts)
-        hosts = hosts|>Map.put(host_id, host_config)
-        map = map|>Map.put(:hosts, hosts)
+        hosts = map|>Dict.get("hosts")
+        hosts = hosts|>Dict.put(host_id, host_config)
+        map = map|>Dict.put("hosts", hosts)
         #IO.puts("map=#{inspect(map)}")
         map
       end )
@@ -103,7 +109,9 @@ defmodule HostTable do
     Agent.get(
       __MODULE__,
       fn map->
-        map|>Map.get(:hosts)|>Map.keys()
+        map
+        |>Dict.get("hosts")
+        |>Dict.keys()
       end)
   end
 end

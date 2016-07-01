@@ -12,7 +12,10 @@ defmodule ExlasticLB.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [applications: [
+      :logger,
+      ]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -28,6 +31,10 @@ defmodule ExlasticLB.Mixfile do
     [
       # a linter for elixir code
       {:dogma, "~> 0.1", only: :dev},
+
+      # a json parser
+      { :poison, "2.2.0"},
+
     ]
   end
 end

@@ -9,7 +9,7 @@ defmodule HostTableTests do
     hosts = HostTable.get_hosts()
     assert @host_id in hosts
     actual = HostTable.get_host(@host_id)
-    expected = HostTable.get_default_host_config()
+    expected = HostTable.default_host_config()
     assert actual==expected
   end
 
