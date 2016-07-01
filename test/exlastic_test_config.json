@@ -1,0 +1,11 @@
+{
+  "hosts":
+  {
+    "metered-host": {
+      "metered": true
+    },
+    "unmetered-host": {
+      "metered": false
+    }
+  }
+}

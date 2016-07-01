@@ -1,5 +1,6 @@
-import Poison
+
 defmodule HostTable do
+  import Poison
   @ default_config %{"hosts" => %{}}
   @ default_host_config %{"metered" => false}
 
@@ -13,19 +14,16 @@ defmodule HostTable do
   Implementing Agent.start_link
   """
   def start_link(config_file\\nil) do
-    {config_hash,hosts} = cond do
+    config_hash = cond do
       config_file != nil ->
         {:ok, body} = File.read(config_file)
         config_hash = Poison.Parser.parse!(body)
-        hosts = config_hash
-        |> Dict.get("hosts")
-        |> Dict.keys()
-        {config_hash, hosts}
       true ->
         config_hash = @default_config
-        hosts = config_hash|>Dict.get("hosts")
-        {config_hash, hosts}
       end
+      hosts = config_hash
+      |> Dict.get("hosts")
+      |> Dict.keys()
     num_hosts = hosts |> Enum.count()
     host_string = Enum.join(hosts, ",")
     IO.puts "Registering #{num_hosts} hosts under this LB"
