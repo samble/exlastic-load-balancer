@@ -68,7 +68,7 @@ defmodule HostTable do
   @doc """
   Updates the health data for all hosts.
   """
-  @spec update_all() :: nil
+  @spec update_all() :: Enum
   def update_all() do
     Enum.map(
       HostTable.get_hosts(),
