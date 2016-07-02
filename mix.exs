@@ -4,6 +4,7 @@ defmodule ExlasticLB.Mixfile do
   def project do
     [app: :exlasticlb,
      version: "0.0.1",
+     test_coverage: [tool: Coverex.Task, console_log: true],
      elixir: "~> 1.0",
      deps: deps]
   end
@@ -33,6 +34,10 @@ defmodule ExlasticLB.Mixfile do
 
       # a static analysis tool
       {:dialyxir, "~> 0.3", only: [:dev]},
+
+      # coverage tool for tests
+      # https://github.com/alfert/coverex
+      {:coverex, "~> 1.4.9", only: :test},
 
       # a json parser
       {:poison, "2.2.0"},

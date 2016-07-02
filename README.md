@@ -24,14 +24,13 @@ Build infrastructure in AWS:
 
 Installing elixir: [see instructions here](http://elixir-lang.org/install.html#unix-and-unix-like)
 
-
 ### Install dependencies
 
     $ mix deps.get
 
 ### Run tests
 
-    $ mix test
+    $ mix test --cover
 
 ### Run linter
 
