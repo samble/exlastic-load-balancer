@@ -4,7 +4,7 @@ use Mix.Config
 
 config :quantum, cron: [
     # Every minute
-    "* * * * *": {ExlasticLB.HostTable, :update}
+    "* * * * *": {ExlasticLB.HostMon, :update}
 ]
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this

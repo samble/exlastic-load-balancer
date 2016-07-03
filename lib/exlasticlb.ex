@@ -16,7 +16,7 @@ defmodule ExlasticLB do
   end
 
   def process([]) do
-      Terminal.user_msg("No arguments given")
+      Terminal.user_msg("No arguments given, need --config [file]")
       System.halt(1)
   end
 
@@ -27,7 +27,6 @@ defmodule ExlasticLB do
         System.halt(1)
       true ->
         IO.puts("escript commandline entry")
-        #start(:normal, [])
         start(:cli,options[:config])
     end
   end
@@ -38,13 +37,16 @@ defmodule ExlasticLB do
       import Supervisor.Spec, warn: false
       IO.puts("application entry")
       IO.puts("#{inspect({start_type, start_args})}")
+
       unconditonal_children = [
         # Define workers and child supervisors to be supervised
       ]
+
       conditional_children = cond do
         start_type==:cli ->
           IO.puts("app/cli entry")
-          [worker(HostTable, start_args)]
+          [worker(HostTable, start_args),
+           supervisor(HostMon, [])]
         start_type == :normal->
           IO.puts("entry from 'mix test' or 'mix run'?")
           IO.puts("for command-line tool, use 'mix escript.build && ./exlasticlb --config config.json'")
