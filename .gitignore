@@ -64,3 +64,4 @@ deps
 *.backup
 cover/
 erl_crash.dump
+exlasticlb

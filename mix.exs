@@ -4,8 +4,11 @@ defmodule ExlasticLB.Mixfile do
   def project do
     [app: :exlasticlb,
      version: "0.0.1",
-     test_coverage: [tool: Coverex.Task, console_log: true],
+     test_coverage: [
+       tool: Coverex.Task,
+       console_log: true],
      elixir: "~> 1.0",
+     escript: [main_module: ExlasticLB],
      deps: deps]
   end
 
@@ -14,7 +17,12 @@ defmodule ExlasticLB.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [
-      applications: [:logger]
+      applications: [
+        :logger,
+        #:quantum,
+        #:exlasticlb,
+      ],
+      mod: {ExlasticLB, []},
     ]
   end
 
@@ -41,6 +49,9 @@ defmodule ExlasticLB.Mixfile do
 
       # a json parser
       {:poison, "2.2.0"},
+
+      # a cron-like scheduling library.  see `config/config.exs` for job scheduling
+       {:quantum, ">= 1.7.1"},
 
       {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"}
     ]

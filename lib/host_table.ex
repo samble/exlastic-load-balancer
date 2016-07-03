@@ -1,6 +1,10 @@
 defmodule HostTable do
+
   @ default_config %{"hosts" => %{}}
-  @ default_host_config %{:instance_type => "", :cpu_usage => 0.0, :available => false}
+  @ default_host_config %{
+    "instance_type" => "",
+    "cpu_usage" => 0.0,
+    "available" => false}
 
   @ t2_cpu_limits %{
     "t2.nano"  =>  0.05,
@@ -25,14 +29,19 @@ defmodule HostTable do
   def start_link(config_file\\nil) do
     config_file_hash = cond do
       config_file != nil ->
-        {:ok, body} = File.read(config_file)
-        Poison.Parser.parse!(body)
+        case File.read(config_file) do
+          {:ok, body}      ->
+            Poison.Parser.parse!(body)
+          {:error, reason} ->
+            IO.puts("error opening #{config_file}")
+            System.halt(1)
+        end
       true ->
         @default_config
       end
-
-    #IO.puts "config_file_hash:"
-    #IO.puts Kernel.inspect config_file_hash, pretty: true
+    user_msg("Starting with configuration:")
+    #{}IO.puts "Starting with configuration:"
+    IO.puts Kernel.inspect config_file_hash, pretty: true
 
     host_config_hash = for {instance_id, data} <-
       config_file_hash["hosts"], into: %{}, do:
@@ -46,11 +55,16 @@ defmodule HostTable do
 
     Agent.start_link(fn -> host_config_hash end, name: __MODULE__)
   end
-  
+
+
+
   defp _create_host_entry(host_map) do
     Map.merge(@default_host_config, host_map)
   end
-
+  @spec user_msg(String) :: any
+  defp user_msg(msg) do
+    IO.puts("#{IO.ANSI.blue()<>msg<>IO.ANSI.reset()}")
+  end
   @doc """
   Gets the configuration for a specific host.
   """
