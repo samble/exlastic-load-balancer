@@ -32,6 +32,14 @@ Installing elixir: [see instructions here](http://elixir-lang.org/install.html#u
 
     $ mix test --cover
 
+## Compile commandline
+
+    $ mix escript.build
+
+## Run commandline
+
+   $ ./exlasticlb --config config.json
+
 ### Run linter
 
     $ mix dogma
