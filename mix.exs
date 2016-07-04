@@ -8,7 +8,7 @@ defmodule ExlasticLB.Mixfile do
        tool: Coverex.Task,
        console_log: true],
      elixir: "~> 1.0",
-     escript: [main_module: ExlasticLB],
+     escript: [main_module: ExlasticLB, app: nil],
      deps: deps]
   end
 
@@ -22,7 +22,7 @@ defmodule ExlasticLB.Mixfile do
         #:quantum,
         #:exlasticlb,
       ],
-      mod: {ExlasticLB, []},
+      mod: {ExlasticLB, [Mix.env]},
     ]
   end
 

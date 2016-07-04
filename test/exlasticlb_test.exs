@@ -15,7 +15,6 @@ defmodule HostTableTests do
     host_names = HostTable.get_hosts()
     assert "metered-host-small" in host_names
     assert "unmetered-host" in host_names
-
     assert HostTable.get_host("metered-host-small")["instance_type"] == "t2.small"
     assert HostTable.get_host("unmetered-host")["instance_type"] == "m4.large"
 

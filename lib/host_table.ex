@@ -39,19 +39,16 @@ defmodule HostTable do
       true ->
         @default_config
       end
-    user_msg("Starting with configuration:")
-    #{}IO.puts "Starting with configuration:"
+
+    user_msg("HostTable configuration:")
     IO.puts Kernel.inspect config_file_hash, pretty: true
-
     host_config_hash = for {instance_id, data} <-
-      config_file_hash["hosts"], into: %{}, do:
-        {instance_id, _create_host_entry(data)}
-
-    #num_hosts = host_config_hash |> Enum.count()
-    #IO.puts "Registering #{num_hosts} hosts under this LB"
-
-    #host_string = Kernel.inspect(host_config_hash, pretty: true)
-    #IO.puts "Hosts are: #{host_string}"
+        config_file_hash["hosts"], into: %{}, do:
+          {instance_id, _create_host_entry(data)}
+    num_hosts = host_config_hash |> Map.keys() |> Enum.count()
+    if num_hosts, do: user_msg("Starting HostTable with #{num_hosts} servers")
+    host_string = Kernel.inspect(host_config_hash, pretty: true)
+    IO.puts "Hosts are: #{host_string}"
 
     Agent.start_link(fn -> host_config_hash end, name: __MODULE__)
   end
@@ -62,7 +59,7 @@ defmodule HostTable do
     Map.merge(@default_host_config, host_map)
   end
   @spec user_msg(String) :: any
-  defp user_msg(msg) do
+  def user_msg(msg) do
     IO.puts("#{IO.ANSI.blue()<>msg<>IO.ANSI.reset()}")
   end
   @doc """
@@ -84,9 +81,11 @@ defmodule HostTable do
   """
   @spec update_all() :: Enum
   def update_all() do
+    HostTable.user_msg("updating everything")
     Enum.map(
       HostTable.get_hosts(),
       fn host_id ->
+        HostTable.user_msg("  updating #{host_id}")
         HostTable.update_host(host_id)
       end)
   end
