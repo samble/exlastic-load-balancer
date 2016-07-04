@@ -7,15 +7,17 @@ defmodule ExlasticLB do
   def main(args) do
       args |> parse_args |> process
       # main() is only used during command-line/escript entry.
-      # it's not really clear to me why, but without a block-forever
-      # call such as the one below the main process will exit and take
-      # all the supervision trees with it.  see also:
-      # https://groups.google.com/forum/#!topic/elixir-lang-talk/N9RZd_8y0sk
-      IO.puts("entering main-loop")
-      # prevent the main process from exiting
-      :timer.sleep(:infinity)
+      main_loop()
   end
-
+  def main_loop() do
+    # it's not really clear to me why, but without a block-forever
+    # call such as the one below the main process will exit and take
+    # all the supervision trees with it.  see also:
+    # https://groups.google.com/forum/#!topic/elixir-lang-talk/N9RZd_8y0sk
+    IO.puts("entering main-loop")
+    # prevent the main process from exiting
+    :timer.sleep(:infinity)
+  end
   defp parse_args(args) do
       {options, _, _} = OptionParser.parse(args,
         switches: [config: :string]
@@ -58,9 +60,7 @@ defmodule ExlasticLB do
         "Application entry: #{inspect({mix_env, start_type, start_args})}")
       cond do
         is_atom(mix_env) ->
-          sstart(
-            mix_env,
-            start_args)
+          sstart(mix_env, start_args)
         is_binary(mix_env) ->
           sstart(start_type, mix_env)
       end

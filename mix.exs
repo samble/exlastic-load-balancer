@@ -32,13 +32,21 @@ defmodule ExlasticLB.Mixfile do
   #
   # Or git/path repositories:
   #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
+  #   {:mydep, git: "https://github.com/elixirlang/mydep.git", tag: "0.1.0"}
   #
   # Type `mix help deps` for more examples and options
   defp deps do
     [
       # a linter for elixir code
       {:dogma, "~> 0.1", only: :dev},
+
+      {:mock, "~> 0.1.1"},
+
+      # meck is required by mock, but version collides with ercloud,
+      # so it is required to be explicit here explicit
+      { :meck, ~r/.*/,
+          [env: :prod, git: "https://github.com/eproxus/meck.git",
+           tag: "0.8.4", manager: :rebar, override: true]},
 
       # a static analysis tool
       {:dialyxir, "~> 0.3", only: [:dev]},
@@ -50,10 +58,10 @@ defmodule ExlasticLB.Mixfile do
       # a json parser
       {:poison, "2.2.0"},
 
-      # a cron-like scheduling library.  see `config/config.exs` for job scheduling
-       {:quantum, ">= 1.7.1"},
+      # a cronlike scheduling library.  see `config/config.exs` for job scheduling
+      {:quantum, ">= 1.7.1"},
 
-      {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"}
+      {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"},
     ]
   end
 end

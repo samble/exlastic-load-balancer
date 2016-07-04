@@ -1,3 +1,4 @@
+import Mock
 
 defmodule HostTableTests do
   use ExUnit.Case
@@ -8,6 +9,19 @@ defmodule HostTableTests do
   end
 
   test "choose_host" do
+  end
+  test "hostmon update_hosts" do
+     HostTable.start_link()
+    HostMon.update_hosts()
+  end
+
+  test "application entrypoint and bad cli arguments" do
+    with_mock System, [halt: fn(exit_code) -> exit_code end] do
+      with_mock ExlasticLB, [main_loop: fn() -> nil end] do
+        ExlasticLB.main(["--bad","arguments"])
+        assert called System.halt(1)
+      end
+    end
   end
 
   test "read config" do
