@@ -3,8 +3,12 @@
 use Mix.Config
 
 config :quantum, cron: [
-    # Every minute
-    "* * * * *": {ExlasticLB.HostTable, :update}
+  update_hosts: [
+    schedule: "* * * * *",
+    task: "HostTable.update_all", # {MyApp.NewsLetter, :send} is supported too
+    args: [],
+    overlap: false,
+  ]
 ]
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
