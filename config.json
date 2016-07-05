@@ -1,0 +1,8 @@
+{
+  "hosts":
+  {
+    "i-1902ba9f": {
+      "instance_type": "t2.small"
+    }
+  }
+}
