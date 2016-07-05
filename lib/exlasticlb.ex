@@ -1,7 +1,6 @@
 #import AWS
 import HostTable
 import Supervisor.Spec, warn: false
-import ELBCLI
 
 defmodule ExlasticLB do
   use Application

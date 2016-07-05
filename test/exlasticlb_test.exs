@@ -1,4 +1,3 @@
-import AWS
 import Mock
 
 defmodule TestCommon do
@@ -21,22 +20,27 @@ defmodule AWSTests do
 
 end
 
-defmodule ELBCLITests do
+defmodule CommandLineTests do
   use ExUnit.Case
 
   # run only these tests with "mix test --only cli"
   @moduletag :cli
 
-  #@tag :skip
-  test "application entrypoint and bad cli arguments" do
-    mocks = [
-      {System, [], [halt:      TestCommon.noop]},
-      {EBCLI,  [], [main_loop: TestCommon.noop]}]
-    with_mocks(mocks) do
-      ELBCLI.main(["--bad","arguments"])
-        assert called System.halt(1)
+  test "multiple mocks" do
+      with_mocks([
+        {HashDict, [],
+         [get: fn(%{}, "http://example.com") -> "<html></html>" end]},
+        {String, [:passthrough],
+         [reverse: fn(x) -> 2*x end,
+          length: fn(_x) -> :ok end]}
+        ]) do
+        assert HashDict.get(%{}, "http://example.com") == "<html></html>"
+        assert String.reverse(3) == 6
+        assert String.length(3) == :ok
+        String.trim("a  abc  a", "a")
       end
   end
+
 end
 
 defmodule HostTableTests do

@@ -1,4 +1,4 @@
-defmodule ELBCLI do
+defmodule ExlasticLB.CommandLine do
   @doc """
   it's not really clear to me why, but without a block-forever
    call such as the one below the main process will exit, taking
@@ -15,7 +15,7 @@ defmodule ELBCLI do
   Entry-point for CLI invocations of exlasticlb (escript entry)
   """
   def main(args) do
-      args |> ELBCLI.parse_args |> ELBCLI.process
+      args |> parse_args |> process
       main_loop()
   end
 
