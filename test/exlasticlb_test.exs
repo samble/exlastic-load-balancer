@@ -55,6 +55,7 @@ defmodule HostTableTests do
 
   test "choose_host" do
   end
+
   test "hostmon update_hosts" do
     HostTable.start_link("test/exlastic_test_config.json")
     HostMon.update_hosts()
