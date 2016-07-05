@@ -9,11 +9,12 @@ defmodule HostMon do
 
   def update_hosts do
     hosts = HostTable.get_hosts()
-    Enum.each(hosts, Task.async(fn(host) ->
-      HostTable.update_host(
-        host["instance_id"],
-        fetch_cpu_usage(host["instance_id"]))
-      end))
+    Enum.each(hosts, fn(host) ->
+      Task.async(
+        HostTable.update_host(
+         host,
+         fetch_cpu_usage(host)))
+      end)
   end
 
   defp fetch_cpu_usage(instance_id) do
