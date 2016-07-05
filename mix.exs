@@ -10,7 +10,9 @@ defmodule ExlasticLB.Mixfile do
        console_log: true],
      elixir: "~> 1.0",
      escript: [main_module: ExlasticLB.CommandLine, app: nil],
-     deps: deps]
+     deps: deps,
+     aliases: aliases,
+]
   end
 
   # Configuration for the OTP application
@@ -65,9 +67,14 @@ defmodule ExlasticLB.Mixfile do
       # http proxy server requirements
       {:cowboy, "~> 1.0.0"},
       {:plug, "~> 1.0"},
-
     ]
   end
+
+  # Some command line aliases
+  def aliases do
+   [serve: ["run", &Proxy.start/1]]
+  end
+
   defp package do
     [
       files: [],
