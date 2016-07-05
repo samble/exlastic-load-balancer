@@ -1,48 +1,13 @@
-import AWS
+#import AWS
 import HostTable
 import Supervisor.Spec, warn: false
+import ELBCLI
+
 defmodule ExlasticLB do
   use Application
 
-  def main(args) do
-      args |> parse_args |> process
-      # main() is only used during command-line/escript entry.
-      main_loop()
-  end
-  def main_loop() do
-    # it's not really clear to me why, but without a block-forever
-    # call such as the one below the main process will exit and take
-    # all the supervision trees with it.  see also:
-    # https://groups.google.com/forum/#!topic/elixir-lang-talk/N9RZd_8y0sk
-    IO.puts("entering main-loop")
-    # prevent the main process from exiting
-    :timer.sleep(:infinity)
-  end
-  defp parse_args(args) do
-      {options, _, _} = OptionParser.parse(args,
-        switches: [config: :string]
-      )
-      options
-  end
-
-  def process([]) do
-      HostTable.user_msg("No arguments given, need --config [file]")
-      System.halt(1)
-  end
-
-  def process(options) do
-    cond do
-      options[:config]==nil ->
-        IO.puts("--config was not passed")
-        System.halt(1)
-      true ->
-        IO.puts("escript commandline entry")
-        #start(:normal, [])
-        start(:cli, [options[:config]])
-    end
-  end
-
-
+  @doc """
+  """
   def starter(children, extra_opts \\ []) do
     # See http://elixir-lang.org/docs/stable/elixir/Application.html
     # for more information on OTP Applications
@@ -55,6 +20,8 @@ defmodule ExlasticLB do
       unconditonal_children++children, opts)
   end
 
+  @doc """
+  """
   def start(start_type, [mix_env | start_args]) do
       HostTable.user_msg(
         "Application entry: #{inspect({mix_env, start_type, start_args})}")
@@ -69,18 +36,25 @@ defmodule ExlasticLB do
   def sstart(mix_env_or_mode, args \\ [])
 
   # function-clauses that work with pattern matching
+  @doc """
+  """
   def sstart(:test, []) do
       IO.puts("entry from 'mix test'?")
       starter([])
   end
 
+  @doc """
+  """
   def sstart(:dev, start_args) do
     Application.ensure_all_started(:quantum)
+    Application.ensure_all_started(:erlcloud)
     starter(
       [supervisor(HostTable, start_args),
        supervisor(HostMon, [])])
   end
 
+  @doc """
+  """
   def sstart(:cli, config_file) do
     IO.puts("CLI entry: #{config_file}")
     sstart(:dev, [config_file])

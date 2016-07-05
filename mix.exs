@@ -4,11 +4,12 @@ defmodule ExlasticLB.Mixfile do
   def project do
     [app: :exlasticlb,
      version: "0.0.1",
+     package: package,
      test_coverage: [
        tool: Coverex.Task,
        console_log: true],
      elixir: "~> 1.0",
-     escript: [main_module: ExlasticLB, app: nil],
+     escript: [main_module: ELBCLI, app: nil],
      deps: deps]
   end
 
@@ -40,13 +41,17 @@ defmodule ExlasticLB.Mixfile do
       # a linter for elixir code
       {:dogma, "~> 0.1", only: :dev},
 
-      {:mock, "~> 0.1.1"},
+      # NB: 0.1.4 is available on github but not hex currently
+      {:mock, "~> 0.1.4", git: "https://github.com/jjh42/mock.git"},
 
       # meck is required by mock, but version collides with ercloud,
       # so it is required to be explicit here explicit
       { :meck, ~r/.*/,
-          [env: :prod, git: "https://github.com/eproxus/meck.git",
-           tag: "0.8.4", manager: :rebar, override: true]},
+          [ env: :prod,
+            git: "https://github.com/eproxus/meck.git",
+            tag: "0.8.4",
+            manager: :rebar,
+            override: true]},
 
       # a static analysis tool
       {:dialyxir, "~> 0.3", only: [:dev]},
@@ -62,6 +67,20 @@ defmodule ExlasticLB.Mixfile do
       {:quantum, ">= 1.7.1"},
 
       {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"},
+    ]
+  end
+  defp package do
+    [
+      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
+      contributors: [
+        "Dave Thomas",
+      ],
+      maintainers: [""],
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => "https://github.com/jjh42/mock",
+        "Docs"   => "https://jjh42.github.io/mock"
+      }
     ]
   end
 end

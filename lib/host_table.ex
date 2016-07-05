@@ -1,5 +1,6 @@
-defmodule HostTable do
 
+defmodule HostTable do
+  # FIXME: use defstruct
   @ default_config %{"hosts" => %{}}
   @ default_host_config %{
     "instance_type" => "",
@@ -20,7 +21,7 @@ defmodule HostTable do
   Class attributes cannot be accessed outside the class,
   so this function simply returns the class attribute
   """
-  @spec default_host_config() :: Dict
+  @spec default_host_config() :: any
   def default_host_config() do @default_host_config end
 
   @doc """
@@ -58,10 +59,12 @@ defmodule HostTable do
   defp _create_host_entry(host_map) do
     Map.merge(@default_host_config, host_map)
   end
+
   @spec user_msg(String) :: any
   def user_msg(msg) do
     IO.puts("#{IO.ANSI.blue()<>msg<>IO.ANSI.reset()}")
   end
+
   @doc """
   Gets the configuration for a specific host.
   """
