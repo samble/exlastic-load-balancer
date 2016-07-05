@@ -14,7 +14,7 @@ defmodule HostTable do
     "t2.large" =>  0.60
   } # http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/t2-instances.html
   # TODO: What does the ** mean practically:
-  # 't2.medium and t2.large instances have two vCPUs. The base performance is an aggregate of the two vCPUs.'
+  # ** 't2.medium and t2.large instances have two vCPUs. The base performance is an aggregate of the two vCPUs.'
 
   @doc """
   Class attributes cannot be accessed outside the class,
@@ -126,30 +126,19 @@ defmodule HostTable do
   Updates the health data for one host.
   The host must have already been registered with the load balancer
   """
-  @spec update_host(String) :: any
-  def update_host(host_id) do
-    Agent.get(
+  @spec update_host(String, Float) :: any
+  def update_host(host_id, cpu_usage_latest) do
+    Agent.update(
       __MODULE__,
       fn map ->
-        current_data = map
-        |> Dict.get(host_id)
-        metered = current_data |> Dict.get("metered")
-        cond do
-          metered == true ->
-            # consult cloudwatch in a Proc here,
-            # Proc must compute new_data, then calls `put_host`
-            true
-          metered == false ->
-             # noop here
-             false
-          true ->
-            # value for `metered` was never set, or set to something
-            # that is not a bool.  this should never happen
-            # TODO: raise an exception here for invalid config,
-            #       or else do config validation during `start_link`
-            #       and during `put_host`
-            nil
-        end
+        host = map[host_id]
+        IO.puts "host: "
+        IO.puts inspect host
+        map = Map.update!(
+          map,
+          host_id,
+          &(Map.put(&1, "cpu_usage", cpu_usage_latest)))
+        map
       end)
   end
 

@@ -26,7 +26,7 @@ defmodule ExlasticLB do
   end
 
   def process([]) do
-      HostTable.user_msg("No arguments given")
+      HostTable.user_msg("No arguments given, need --config [file]")
       System.halt(1)
   end
 
@@ -76,7 +76,9 @@ defmodule ExlasticLB do
 
   def sstart(:dev, start_args) do
     Application.ensure_all_started(:quantum)
-    starter([supervisor(HostTable, start_args),])
+    starter(
+      [supervisor(HostTable, start_args),
+       supervisor(HostMon, [])])
   end
 
   def sstart(:cli, config_file) do

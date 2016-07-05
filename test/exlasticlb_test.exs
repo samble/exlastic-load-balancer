@@ -47,17 +47,23 @@ defmodule HostTableTests do
   test "update one" do
     HostTable.start_link()
     HostTable.put_host(@host_id)
-    HostTable.update_host(@host_id)
+    HostTable.update_host(@host_id, 0.69)
+
+    IO.puts "updated host: "
+    IO.puts inspect HostTable.get_host(@host_id)
   end
 
   test "update many" do
     HostTable.start_link()
     HostTable.put_host(@host_id)
-    HostTable.update_host(@host_id)
+    HostTable.update_host(@host_id, 0)
   end
 
   test "get AWS cpu usage percent" do
-    #AWS.cpu_usage_percent('dummy')
+    :ssl.start()
+    :erlcloud.start()
+
+    IO.puts inspect AWS.get_cpu_metrics('i-1902ba9f')
     assert true
   end
 

@@ -1,8 +1,8 @@
 defmodule AWS do
   @doc """
   """
-  @spec cpu_usage_percent(String) :: Integer
-  def cpu_usage_percent(instance_id) do
+  @spec get_cpu_metrics(String) :: Integer
+  def get_cpu_metrics(instance_id) do
     :erlcloud_mon.get_metric_statistics(
       'CPUUtilization',
       {{2016, 06, 29},{0, 0, 0}},

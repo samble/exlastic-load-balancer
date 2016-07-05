@@ -5,7 +5,7 @@ use Mix.Config
 config :quantum, cron: [
   update_hosts: [
     schedule: "* * * * *",
-    task: "HostTable.update_all", # {MyApp.NewsLetter, :send} is supported too
+    task: "HostMon.update_hosts", # {MyApp.NewsLetter, :send} is supported too
     args: [],
     overlap: false,
   ]
