@@ -1,3 +1,4 @@
+require Logger
 
 defmodule HostTable do
   @moduledoc """
@@ -52,7 +53,7 @@ defmodule HostTable do
     num_hosts = host_config_hash |> Map.keys() |> Enum.count()
     if num_hosts, do: user_msg("Starting HostTable with #{num_hosts} servers")
     host_string = Kernel.inspect(host_config_hash, pretty: true)
-    IO.puts "Hosts are: #{host_string}"
+    Logger.info("Hosts are: #{host_string}")
 
     Agent.start_link(fn -> host_config_hash end, name: __MODULE__)
   end

@@ -2,6 +2,16 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :logger,
+  handle_otp_reports: true,
+  handle_sasl_reports: true,
+  level: :debug,
+  truncate: 4096
+
+config :logger, :console,
+  format: "\n$time $metadata[$level] $levelpad$message\n",
+  metadata: [:user_id]
+
 config :quantum, cron: [
   update_hosts: [
     schedule: "* * * * *",
