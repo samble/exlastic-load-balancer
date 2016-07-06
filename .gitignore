@@ -60,7 +60,6 @@ target/
 _build
 mix.lock
 deps
-*.tfstate
 *.backup
 cover/
 erl_crash.dump
