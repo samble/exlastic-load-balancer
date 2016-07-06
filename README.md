@@ -6,7 +6,13 @@ See `infracode/README.md`.
 
 Installing elixir: [see instructions here](http://elixir-lang.org/install.html#unix-and-unix-like)
 
-### Install dependencies
+
+### Clone this repository and enter source root
+
+    $ git clone git@github.com:samble/exlastic-load-balancer.git
+    $ cd exlastic-load-balancer
+
+### Install Elixir project dependencies
 
     $ mix deps.get
 
@@ -35,3 +41,8 @@ The first time you have to build the [persistent lookup table](https://github.co
 Thereafter, just run
 
     $ mix dialyzer
+
+### Installing pre-commit hooks
+
+    $ sudo pip install pre-commit
+    $ pre-commit install
