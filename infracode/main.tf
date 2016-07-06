@@ -1,4 +1,4 @@
-# The various ${var.foo} come from variables.tf
+# NB: The various ${var.foo} come from variables.tf
 
 # Specify the provider and access details
 provider "aws" {
@@ -6,6 +6,9 @@ provider "aws" {
     profile = "samble"
 }
 
+# named outputs are accessible via `terraform output <name>`
+output "address" { value = "${aws_instance.web.public_dns}" }
+output "id" { value = "${aws_instance.web.id}" }
 
 resource "aws_instance" "web" {
 

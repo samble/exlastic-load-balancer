@@ -11,10 +11,11 @@ In the `~/.aws/credentials` file, add something like this (profile name must be 
     aws_access_key_id = your_access_key
     aws_secret_access_key = your_secret_key
 
-Show infrastructure plan:
+**Working with terraform:**
 
-    $ terraform plan infracode
+ALL COMMANDS MUST BE EXECUTED FROM THE INFRACODE DIRECTORY!
 
-Build infrastructure in AWS:
-
-    $ terraform apply infracode
+    $ cd infracode
+    $ terraform plan # shows update plan
+    $ terraform apply # applies changes
+    $ terraform output address # shows public ip
