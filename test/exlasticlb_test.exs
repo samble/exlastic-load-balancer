@@ -10,8 +10,8 @@ defmodule AWSTests do
   # run only these tests with "mix test --only aws"
   @moduletag :aws
 
-  @real_instance "i-1902ba9f"
-
+  @real_instance "i-12363f8e"
+  
   test "get AWS cpu usage percent" do
     Application.ensure_all_started(:erlcloud)
     IO.puts inspect AWS.get_cpu_metrics(@real_instance)

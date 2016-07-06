@@ -48,6 +48,7 @@ defmodule ExlasticLB do
   def sstart(:dev, start_args) do
     Application.ensure_all_started(:quantum)
     Application.ensure_all_started(:erlcloud)
+    Application.ensure_all_started(:logger)
     starter(
       [supervisor(HostTable, start_args),
        supervisor(HostMon, [])])
