@@ -1,8 +1,9 @@
-#import AWS
 import HostTable
 import Supervisor.Spec, warn: false
 
 defmodule ExlasticLB do
+  @moduledoc """
+  """
   use Application
 
   @doc """
@@ -14,9 +15,9 @@ defmodule ExlasticLB do
       # Define workers and child supervisors to be supervised
     ]
     IO.puts("Children (#{Enum.count(children)} total): #{inspect(children)}")
-    opts = extra_opts++[strategy: :one_for_one, name: ExlasticLB.Supervisor]
+    opts = extra_opts ++ [strategy: :one_for_one, name: ExlasticLB.Supervisor]
     Supervisor.start_link(
-      unconditonal_children++children, opts)
+      unconditonal_children ++ children, opts)
   end
 
   @doc """
