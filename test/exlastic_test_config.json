@@ -9,6 +9,9 @@
     },
     "unmetered-host": {
       "instance_type": "m4.large"
+    },
+    "rackspace-host": {
+      "instance_type": "rackspace"
     }
   }
 }
