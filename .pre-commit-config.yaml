@@ -9,14 +9,14 @@
 -   repo: local
     hooks:
     -   id: mix_dogma
-        name: Mixing dogma
+        name: "Elixer: mixing dogma"
         entry: mix dogma
         language: system
         files: \.ex$
     -   id: mix_escript
-        name: Mixing escript.build
+        name: "Elixir: Mixing escript.build"
         #entry: python -c "import os; os.system('mix escript.build')"
         entry: python -c "import os; raise SystemExit(os.system('mix escript.build'))"
         language: system
-        files: xxx.xxx
+        files: \.ex$,\.exs$
         always_run: true
