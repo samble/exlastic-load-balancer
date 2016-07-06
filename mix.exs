@@ -9,32 +9,23 @@ defmodule ExlasticLB.Mixfile do
        tool: Coverex.Task,
        console_log: true],
      elixir: "~> 1.0",
-     escript: [main_module: ELBCLI, app: nil],
+     escript: [main_module: ExlasticLB.CommandLine, app: nil],
      deps: deps]
   end
 
   # Configuration for the OTP application
-  #
   # Type `mix help compile.app` for more information
   def application do
     [
-      applications: [
-        :logger,
-        #:quantum,
-        #:exlasticlb,
-      ],
+      applications: [:logger],
       mod: {ExlasticLB, [Mix.env]},
     ]
   end
 
   # Dependencies can be Hex packages:
-  #
   #   {:mydep, "~> 0.3.0"}
-  #
   # Or git/path repositories:
-  #
   #   {:mydep, git: "https://github.com/elixirlang/mydep.git", tag: "0.1.0"}
-  #
   # Type `mix help deps` for more examples and options
   defp deps do
     [
@@ -63,23 +54,31 @@ defmodule ExlasticLB.Mixfile do
       # a json parser
       {:poison, "2.2.0"},
 
-      # a cronlike scheduling library.  see `config/config.exs` for job scheduling
+      # a cronlike scheduling library.
+      # see `config/config.exs` for job scheduling
       {:quantum, ">= 1.7.1"},
 
-      {:erlcloud, git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"},
+      { :erlcloud,
+        git: "https://github.com/samble/erlcloud-aws-get-metric-statistics.git"
+      },
+
+      # http proxy server requirements
+      {:cowboy, "~> 1.0.0"},
+      {:plug, "~> 1.0"},
+
     ]
   end
   defp package do
     [
-      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
+      files: [],
       contributors: [
-        "Dave Thomas",
+        "",
       ],
       maintainers: [""],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/jjh42/mock",
-        "Docs"   => "https://jjh42.github.io/mock"
+        "GitHub" => "",
+        "Docs"   => ""
       }
     ]
   end
