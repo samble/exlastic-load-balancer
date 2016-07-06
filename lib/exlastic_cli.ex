@@ -1,12 +1,15 @@
 defmodule ExlasticLB.CommandLine do
+  @moduledoc """
+  """
+
   @doc """
   it's not really clear to me why, but without a block-forever
    call such as the one below the main process will exit, taking
    all the supervision trees with it.  see also:
    https://groups.google.com/forum/#!topic/elixir-lang-talk/N9RZd_8y0sk
   """
-  @spec main_loop() :: any
-  def main_loop() do
+  @spec main_loop :: any
+  def main_loop do
     IO.puts("entering main-loop")
     :timer.sleep(:infinity) # prevent the main process from exiting
   end
@@ -38,7 +41,7 @@ defmodule ExlasticLB.CommandLine do
   """
   def process(options) do
     cond do
-      options[:config]==nil ->
+      options[:config] == nil ->
         IO.puts("--config was not passed")
         System.halt(1)
       true ->
