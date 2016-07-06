@@ -19,3 +19,8 @@
         entry: python -c "import os; raise SystemExit(os.system('mix escript.build'))"
         language: system
         files: \.(ex|exs)$
+    -   id: mix_test
+        name: "Elixer: mixing tests"
+        entry: mix test
+        language: system
+        files: \.ex$
