@@ -1,5 +1,7 @@
 
 defmodule HostTable do
+  @moduledoc """
+  """
   # FIXME: use defstruct
   @ default_config %{"hosts" => %{}}
   @ default_host_config %{
@@ -15,26 +17,27 @@ defmodule HostTable do
     "t2.large" =>  0.60
   } # http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/t2-instances.html
   # TODO: What does the ** mean practically:
-  # ** 't2.medium and t2.large instances have two vCPUs. The base performance is an aggregate of the two vCPUs.'
+  # ** 't2.medium and t2.large instances have two vCPUs.
+  # The base performance is an aggregate of the two vCPUs.'
 
   @doc """
   Class attributes cannot be accessed outside the class,
   so this function simply returns the class attribute
   """
-  @spec default_host_config() :: any
-  def default_host_config() do @default_host_config end
+  @spec default_host_config :: any
+  def default_host_config do @default_host_config end
 
   @doc """
   Implementing Agent.start_link
   """
-  def start_link(config_file\\nil) do
+  def start_link(config_file \\ nil) do
     config_file_hash = cond do
       config_file != nil ->
         case File.read(config_file) do
-          {:ok, body}      ->
+          {:ok, body} ->
             Poison.Parser.parse!(body)
           {:error, reason} ->
-            IO.puts("error opening #{config_file}")
+            IO.puts("error opening #{config_file}: #{reason}")
             System.halt(1)
         end
       true ->
@@ -54,15 +57,14 @@ defmodule HostTable do
     Agent.start_link(fn -> host_config_hash end, name: __MODULE__)
   end
 
-
-
   defp _create_host_entry(host_map) do
     Map.merge(@default_host_config, host_map)
   end
 
   @spec user_msg(String) :: any
   def user_msg(msg) do
-    IO.puts("#{IO.ANSI.blue()<>msg<>IO.ANSI.reset()}")
+    msg = IO.ANSI.blue() <> msg <> IO.ANSI.reset()
+    IO.puts(msg)
   end
 
   @doc """
@@ -73,24 +75,10 @@ defmodule HostTable do
     Agent.get(
       __MODULE__,
       fn map ->
-        #IO.puts("map=#{inspect(map)}")
+        # IO.puts("map=#{inspect(map)}")
         Map.get(map, host_id)
       end
     )
-  end
-
-  @doc """
-  Updates the health data for all hosts.
-  """
-  @spec update_all() :: Enum
-  def update_all() do
-    HostTable.user_msg("updating everything")
-    Enum.map(
-      HostTable.get_hosts(),
-      fn host_id ->
-        HostTable.user_msg("  updating #{host_id}")
-        HostTable.update_host(host_id)
-      end)
   end
 
   @doc """
@@ -111,8 +99,8 @@ defmodule HostTable do
   Based on all available host health data, choose the host that
   should answer the current HTTP request.
   """
-  @spec choose_host() :: String
-  def choose_host() do
+  @spec choose_host :: String
+  def choose_host do
     hosts = HostTable.get_hosts()
     ranks = Enum.map(
           hosts,
@@ -155,7 +143,7 @@ defmodule HostTable do
       __MODULE__,
       fn map ->
         map = Map.put(map, host_id, host_config)
-        #IO.puts("map=#{inspect(map)}")
+        # IO.puts("map=#{inspect(map)}")
         map
       end )
   end
@@ -163,11 +151,11 @@ defmodule HostTable do
   @doc """
   Get a Enum of all the host_id registered with the loader balancer
   """
-  @spec get_hosts() :: Enum
-  def get_hosts() do
+  @spec get_hosts :: Enum
+  def get_hosts do
     Agent.get(
       __MODULE__,
-      fn map->
+      fn map ->
         Map.keys(map)
       end)
   end

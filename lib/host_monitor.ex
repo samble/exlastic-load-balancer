@@ -1,18 +1,20 @@
-import AWS
-import HostTable
-
 defmodule HostMon do
+  @moduledoc """
+  """
 
   def start_link do
     Task.Supervisor.start_link([name: __MODULE__])
   end
 
+  @doc """
+  Updates the health data for all hosts.
+  """
   def update_hosts do
     hosts = HostTable.get_hosts()
     Enum.each(hosts, fn(host) ->
       Task.start_link(
         fn ->
-          HostTable.update_host(host,fetch_cpu_usage(host))
+          HostTable.update_host(host, fetch_cpu_usage(host))
           end)
       end)
   end

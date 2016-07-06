@@ -1,7 +1,7 @@
 import Mock
 
 defmodule TestCommon do
-  def noop(args\\nil) do args end
+  def noop(args \\ nil) do args end
 end
 
 defmodule AWSTests do
@@ -31,7 +31,7 @@ defmodule CommandLineTests do
         {HashDict, [],
          [get: fn(%{}, "http://example.com") -> "<html></html>" end]},
         {String, [:passthrough],
-         [reverse: fn(x) -> 2*x end,
+         [reverse: fn(x) -> 2 * x end,
           length: fn(_x) -> :ok end]}
         ]) do
         assert HashDict.get(%{}, "http://example.com") == "<html></html>"
@@ -66,12 +66,14 @@ defmodule HostTableTests do
   end
 
   test "read config" do
-    HostTable.start_link("test/exlastic_test_config.json");
+    HostTable.start_link("test/exlastic_test_config.json")
     host_names = HostTable.get_hosts()
     assert "metered-host-small" in host_names
     assert "unmetered-host" in host_names
-    assert HostTable.get_host("metered-host-small")["instance_type"] == "t2.small"
-    assert HostTable.get_host("unmetered-host")["instance_type"] == "m4.large"
+    tmp = HostTable.get_host("metered-host-small")
+    assert tmp["instance_type"] == "t2.small"
+    tmp = HostTable.get_host("unmetered-host")
+    assert tmp["instance_type"] == "m4.large"
   end
 
   test "simple registration" do
@@ -81,7 +83,7 @@ defmodule HostTableTests do
     assert @host_id in hosts
     actual = HostTable.get_host(@host_id)
     expected = HostTable.default_host_config()
-    assert actual==expected
+    assert actual == expected
   end
 
   test "update one" do
@@ -91,12 +93,6 @@ defmodule HostTableTests do
 
     IO.puts "updated host: "
     IO.puts inspect HostTable.get_host(@host_id)
-    #mocks = [
-    #  {AWS,  [], [get_cpu_usage: TestCommon.noop]}]
-    #with_mocks(mocks) do
-    #  HostTable.update_host(@host_id)
-    #  assert called AWS.get_cpu_usage(@host_id)
-    #  end
   end
 
   test "update many" do
