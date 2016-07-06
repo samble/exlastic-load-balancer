@@ -15,7 +15,7 @@
         files: \.ex$
     -   id: mix_escript
         name: "Elixir: Mixing escript.build"
-        #entry: python -c "import os; os.system('mix escript.build')"
+        # WTF: invoking mix directly doesn't work.
         entry: python -c "import os; raise SystemExit(os.system('mix escript.build'))"
         language: system
         files: \.(ex|exs)$
