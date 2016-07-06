@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import HostTable
-=======
->>>>>>> 35032fe... logging
 import Supervisor.Spec, warn: false
-require Logger
 
 defmodule ExlasticLB do
   @moduledoc """
@@ -43,7 +39,7 @@ defmodule ExlasticLB do
   @doc """
   """
   def sstart(:test, []) do
-      Logger.info("entry from 'mix test'?")
+      IO.puts("entry from 'mix test'?")
       starter([])
   end
 
