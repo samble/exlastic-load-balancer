@@ -15,7 +15,8 @@
         files: \.ex$
     -   id: mix_escript
         name: Mixing escript.build
-        entry: python -c "import os; os.system('mix escript.build')"
+        #entry: python -c "import os; os.system('mix escript.build')"
+        entry: python -c "import os; raise SystemExit(os.system('mix escript.build'))"
         language: system
         files: xxx.xxx
         always_run: true
