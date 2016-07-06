@@ -19,4 +19,3 @@
         entry: python -c "import os; raise SystemExit(os.system('mix escript.build'))"
         language: system
         files: \.(ex|exs)$
-        always_run: true
