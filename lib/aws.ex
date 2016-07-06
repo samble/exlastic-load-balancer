@@ -1,4 +1,7 @@
 defmodule AWS do
+  @moduledoc """
+  """
+
   @doc """
   """
   @spec get_cpu_metrics(String) :: Integer
