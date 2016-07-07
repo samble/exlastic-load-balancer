@@ -54,3 +54,7 @@ The steps are basically the same as the load-balancer steps, except that you'll 
     $ fab create && fab setup provision
     $ fab deploy
     $ fab check
+
+To create load on the test servers and influence the choice of the load-balancer, run:
+
+    $ fab stress
