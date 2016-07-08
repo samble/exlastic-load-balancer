@@ -1,0 +1,96 @@
+//
+// vagrant.json
+//
+//   This file configures vagrant support for ymir.
+//
+//   See also: mattvonrocketstein.github.io/ymir/vagrant
+//
+{
+    // Whether ymir should display extra debugging information
+    // NB: This parameter also controls puppet and ansible debug levels
+    "ymir_debug": true,
+
+    // Whether ymir should build puppet on the remote side.
+    // Puppet-builds only occur during the `setup` operation, and
+    // are skipped if a good version of puppet is found to already exist
+    // on the remote side.  When this key is not found in this configuration,
+    // it defaults to true.
+    "ymir_build_puppet": false,
+
+    // Sets the namespace for this service.
+    // This is currently unused for vagrant-based configs,
+    // but these variables are potentially useful for templating.
+    "org_name": "orgName",
+    "app_name": "appName",
+    "env_name": "envName",
+    "service_name": "vagrant-demo",
+
+    "logs": [
+        // declare logfile locations on this service
+        // this can be used to tail/retrieve logs.
+    ],
+
+    // sets the name for this service.
+    // this will be used in AWS tags: choose wisely
+    // for readability and any logging you add later
+    // Suggested format: "org_name-app_name-env_name"
+    "name" : "demo-service",
+
+    "service_description": "demo service for vagrant",
+
+    // NB: instance_type for vagrant configs should always be "vagrant"
+    "instance_type"   : "vagrant",
+
+    // path specifying the file which is the main entry point for puppet code
+    // this file will be used only after the dependencies mentioned in
+    // metadata.json have been installed.
+    "setup_list" : [
+    ],
+
+    // A list of service-specific puppet files to execute during
+    // provisioning of this service.  By the time provisioning happens,
+    // any puppet dependencies mentioned in puppet/metadata.json are
+    //  guaranteed to be installed as long as the `setup` operation
+    // has already run.  See also: `setup_list` field in this file
+    "provision_list" : [
+    ],
+
+    // Health checks to execute against this service when the `check`
+    // operation is used.  Reflective-templating (with values in this config)
+    // is allowed and encouraged, because anything IP-based will be useless
+    // after executing terminate/create operations.
+    "health_checks": {
+        "web" :
+        ['http_200', 'http://{{host}}'],
+    },
+
+    // Schema-free section for misc. site configuration.
+    // Useful for template-variables that can be passed on to the
+    // puppet FACTer, the ansible environment, or used to configure
+    // application particulars.
+    'service_defaults' : {
+    },
+
+    // This section is parsed directly by vagrant (see the Vagrantfile).
+    // Do NOT use {{templating}} inside here, it won't work.  Each variable
+    // must be defined, and any changes will be picked up by vagrant immediately
+    // NOT during the next call to ymir's' `setup` operation.  Only the most common
+    // vagrant variables are included here.. for other kinds of virtualmachine hackery
+    // you'll need to modify the Vagrantfile directly.
+    //
+    // Hints:
+    //    ubuntu/trusty32
+    //    centos/7  (NB: i can't ssh into this box, maybe only 64bit?)
+    //    boxcutter/debian82-i386
+    //    puppetlabs/centos-6.6-32-puppet
+    'vagrant': {
+        'boot_timeout': 400,
+        'box': 'ubuntu/trusty32',
+        'box_check_update': false,
+        'cpus': 1,
+        'insert_key': true,
+        'name': 'default',
+        'ram': 512,
+        'sync_disabled': true,
+    }
+}

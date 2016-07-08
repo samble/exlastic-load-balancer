@@ -1,0 +1,30 @@
+#
+# Ansible playbook for the ymir polyglot demo
+#
+- hosts: all
+  become: yes
+  become_method: sudo
+
+  # slow.  disable if possible!
+  gather_facts: yes
+
+  tasks:
+  - name: Install system packages
+    apt: name={{item}} state=installed
+    with_items:
+       - htop
+       - stress
+       - python
+       - mosh
+       - python-dev
+       - python-pip
+       - supervisor
+
+  - name: Push supervisor template to the load-balancer host
+    template: src=templates/etc_supervisor_conf.d_load-balancer.conf dest=/etc/supervisor/conf.d/load-balancer.conf mode="u=rw,g=r,o=r"
+
+
+  # no customization, so we might as well have used apt.
+  # but, this is here to demonstrate the usage of roles
+  #roles:
+  #  - { role: geerlingguy.nginx }

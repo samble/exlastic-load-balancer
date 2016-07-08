@@ -1,0 +1,158 @@
+//
+// service.json for `exlasticlb`
+//
+//  Complete documentation for the file schema is here:
+//    http://tinyurl.com/ymir-service-description
+//
+{
+
+    // Whether ymir should display extra debugging information
+    // NB: This parameter also controls puppet and ansible debug levels
+    "ymir_debug": true,
+
+    // Whether ymir should build puppet on the remote side.
+    // Puppet-builds only occur during the `setup` operation, and
+    // are skipped if a good version of puppet is found to already exist
+    // on the remote side.  When this key is not found in this configuration,
+    // it defaults to true.
+    "ymir_build_puppet": false,
+
+    // Sets namespace for this service.
+    // This is used in tagging for AWS-based services,
+    // and these variables are often useful for templating.
+    "org_name": "exlasticlb",
+    "app_name": "exlasticlb",
+    "env_name": "dev",
+    "service_name": "exlasticlb",
+
+    // Sets the name for this service.
+    // This will be used in service discovery for provisioning, etc,
+    // after this service has been created.  Choose wisely!
+    "name" : "exlastic",
+
+    // Human-friendly description of what this service does.
+    // Will also be used as an instance tag for AWS.
+    "service_description": "exlasticlb",
+
+
+    // AWS tags which are set to "true".  This will be useful for
+    // sorting/filtering instances later.  Suggested usage: mention
+    // the programming-language so you can filter by instances later by
+    // stuff like "python", or "node".  Tags like "web" or "worker" are
+    // also a good idea.
+    "tags": [],
+
+    // Declare logfile locations on this service.  This will
+    // be used later for operations that tail or retrieve logs.
+    "logs": [
+        "/var/logs/syslog"
+    ],
+
+    // Declare elastic (static) IP addresses for AWS here.
+    // During the `setup` operation, these will be bound if
+    // to the instance if they are found to be currently unbound,
+    // but they must already exist according to the AWS API.
+    "elastic_ips": [],
+
+    // Sets the AMI for this service.  The default is ubuntu 14.04,
+    // amd64 ebs us-east-1.  Other potentially useful hints follow:
+    //
+    // "ami-3cf8b154": PV (only suitable for t1.micro)
+    // "ami-0021766a": 14.04 HVM:ebs (t2.*, etc)
+    "ami" : "ami-0021766a",
+
+    // Sets the AWS instance type for this service make sure
+    // AMI above matches the instance type you are asking for
+    "instance_type"   : "t2.micro",
+
+    // Sets reservation extras for the AWS instance.  These are
+    // essentially extra parameters passed to boto's `run_instances()`
+    // aka boto.ec2.connection.EC2Connection.run_instances.  For more
+    // documentation, see the function signature here: http://bit.ly/29oRt6Y
+    "reservation_extras": {
+      "monitoring_enabled": true,
+    },
+
+    // Sets the username for this service.
+    // This is used for ssh, so make sure this matches the
+    // AMI you have chosen.  Ubuntu-based AMIs use `ubuntu`
+    // whereas CentOS (and elasticbeanstalk) will use `ec2-user`
+    "username" : "ubuntu",
+
+    // The location of the pem file for this service.
+    // This will be used for ssh connections with the service, and if
+    // it is not correct then no remote commands can be executed.
+    // Tilde expansion can be relied upon.
+    "pem" : "~/.ssh/exlastic.pem",
+
+    // Sets up the AWS key_name for this service.
+    // By default, the value for the "app_name" field
+    // in this file will be used.  You can find the
+    // keys for your AWS account at the console here**
+    // **: https://console.aws.amazon.com/iam/home#encryptionKeys
+    "key_name" : "exlastic",
+
+    // The `security_groups` field provides a list of names for the
+    // AWS security groups this service will belong to. The existence
+    // of these security groups will be confirmed when `ymir validate`
+    // is run on this service from the command line.
+    "security_groups" : ['default'],
+
+    // The `setup_list` field provides a list of instructions to
+    // execute during the setup operation for this service.  Even
+    // when this list is empty, the setup operation potentially has
+    // much time-consuming work to do (such as refreshing ansible/puppet
+    // dependencies or refreshing the system package list with apt/yum).
+    // Use `setup_list` for heavy-lifting that doesn't need to happen
+    // often and work that is uncacheable or not-quite idempotent.
+    // Use `provision_list` for things that are more comfortable to
+    // run repeatedly.
+    "setup_list" : [
+
+    ],
+
+    // The `provision_list` field provides a list of  instructions to
+    // execute during the provisioning of this service.  By the time
+    // provisioning happens, any puppet or ansible dependencies (mentioned
+    // in puppet/metadata.json and ansible/requirements.yml, respectively)
+    // are guaranteed to be installed as long as the `setup` operation has
+    // already run.
+    //
+    // Note that instructions in the following list may use "{{variables}}"
+    // mentioned elsewhere in this file, subject to the standard template
+    // scoping rules.  File locations for "puppet://" instructions are
+    // relative to the service-root, i.e. the directory this file is in.
+    //
+    // Full docs for the provision_list instruction format:  http://tinyurl.com/jole3p9
+    "provision_list" : [
+      "fabric://provision_elixir",
+      "ansible-playbook://ansible/play.yml"
+    ],
+
+    // Health checks to execute against this service when the `check`
+    // operation is used.  Reflective-templating (with values in this config)
+    // is allowed and encouraged, because anything IP-based will be useless
+    // after executing terminate/create operations.
+    "health_checks": {
+      "elixir command present":
+        ["testinfra", "Command('elixir --version').rc==0"],
+      "supervisor service running":
+          ["testinfra", "Service('supervisor').is_running"],
+    },
+
+    // Schema-free section for misc. site configuration.
+    //
+    // Variables mentioned here may be used for templating values inside
+    // the `health_checks`, `provision_list`, and `setup_list` fields
+    //
+    // Variables mentioned here may optionally be used by the puppet and
+    // ansible provisioners.  In the case of puppet, environment variables
+    // must be used (so there is no support hashes and probably bad support
+    // for extremely long strings).  Ansible support is much more complete.
+    'service_defaults' : {
+      "lb_daemon_upload_path": "/home/{{username}}/exlasticlb",
+      "lb_config_upload_path": "/home/{{username}}/config.json",
+      "lb_daemon_invocation":
+        "{{lb_daemon_upload_path}} --config {{lb_config_upload_path}}",
+    }
+}
